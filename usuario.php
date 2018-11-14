@@ -1,0 +1,153 @@
+<html>
+<?php 
+
+?>
+<head>
+  <title> </title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</head>
+<body style = "background-color:powderblue; ">
+
+<div class="row">
+  <div class="col-md-4"></div>
+
+<!-- INICIA LA COLUMNA -->
+
+
+  <div class="col-md-4">
+
+ 
+      <center> <img src="logo.png" width="300" /> </center>
+ 
+
+    <form method="POST" action="usuario.php" >
+
+                            
+     <img src="atras.png" width="60" style="position: absolute;top: 4%; position: absolute;left: -20%"></img>
+     <img src="ayuda.png" width="60" style="position: absolute;top: 4%; position: absolute;left: 100%"></img>
+                 
+    <div class="form-group">
+
+    <div class="form-group">
+      <label for="doc">Nombre</label>
+      <input type="text" name="nombre" class="form-control" id="nombre" >
+    </div>
+
+    <div class="form-group">
+        <label for="nombre">Autor </label>
+        <input type="text" name="autor" class="form-control" id="autor" >
+    </div>
+
+    
+    <center>
+      <input type="submit" value="Consultar" class="btn btn-primary" name="btn_consultar" >
+      
+
+
+    </center>
+
+
+  </form>
+  <div class = "col-xs-12">
+      <table class = "table table-striped">
+      <thead>
+        <tr>
+          <th witdh = 100>Nombre </th> 
+          <th witdh = 100>Autor</th>
+          <th witdh = 100>Editorial </th>
+          <th witdh = 100>Año de publicación </th>
+          <th witdh = 100>Estantería </th>
+        </tr>
+      </thead>
+      <tbody>
+
+  <?php
+    include("abrir_conexion.php");
+
+
+
+      if(isset($_POST['btn_consultar']))
+      {
+        
+        $nombre = $_POST ['nombre'];
+        $autor = $_POST ['autor'];
+        $buscado = 0;
+        $b_Id = 0;
+        if ($autor != "" and $nombre == ""){
+          $nombre = "981117/555*!#QSssadsad";
+        }
+
+       
+
+         $resultados = mysqli_query($conexion,"SELECT * FROM $tabla_db1 WHERE (nombre LIKE'%$nombre%' or autor = '$autor') and '$nombre' IS NOT NULL " );
+         if ($nombre == "" and $autor == "" ){
+            echo "Llene por lo menos un campo";
+         }
+         else {
+
+           while($consulta = mysqli_fetch_array($resultados))         
+         {
+
+
+          ?>
+          <tr>
+            <td><?php echo $consulta['nombre']. "<br>"; ?></td>
+            <?php $estanteria = $consulta['estanteria'];
+                  $b_Id = $consulta['id'];
+                  $buscado = (int)$consulta['buscado'] +1;
+            ?>
+            <td><?php echo $consulta['autor']. "<br>"; ?></td>
+            <td><?php echo $consulta['editorial']. "<br>"; ?> </td>
+            <td><?php echo $consulta['anio']. "<br>"; ?> </td>
+            <td><?php echo $consulta['estanteria']. "<br>"; ?></td>
+            
+        <a href="consulta.php?variable1=<?php echo $consulta['estanteria'] <?php echo $variable2 ?>Ver la otra Pagina</a>"
+          ?>
+          <?php
+            }
+
+            ?>
+
+            
+            </tr>
+
+          <?php
+           $_UPDATE_SQL="UPDATE $tabla_db1 Set 
+            buscado='$buscado'
+            WHERE id='$b_Id'"; 
+            mysqli_query($conexion,$_UPDATE_SQL);
+
+        }
+
+      }
+
+      }
+
+
+    
+  ?>
+</tbody>
+</table>
+
+  </div>
+
+
+<!-- TERMINA LA COLUMNA -->
+
+
+
+  <div class="col-md-4"></div>
+</div>
+
+
+
+  
+</body>
+</html>
